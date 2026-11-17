@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Workmate — Day 21 Workspace Backup &amp; Restore</title>
+<title>AI Workmate — Day 22 Theme Settings</title>
 
 <style>
 * {
@@ -428,6 +428,72 @@ button:disabled {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* Day 22: persistent dark theme */
+body[data-theme="dark"] {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+body[data-theme="dark"] header h1 { color: #93c5fd; }
+body[data-theme="dark"] header p,
+body[data-theme="dark"] .history-date,
+body[data-theme="dark"] .empty-history,
+body[data-theme="dark"] #status { color: #cbd5e1; }
+body[data-theme="dark"] .dashboard,
+body[data-theme="dark"] .input-card,
+body[data-theme="dark"] .result-card,
+body[data-theme="dark"] .history-card {
+    background: #1e293b;
+    color: #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+body[data-theme="dark"] .stat-card,
+body[data-theme="dark"] .section,
+body[data-theme="dark"] .priority-item,
+body[data-theme="dark"] .bulk-task-tools {
+    background: #334155;
+    color: #e2e8f0;
+}
+body[data-theme="dark"] textarea,
+body[data-theme="dark"] .task-search,
+body[data-theme="dark"] .task-sort,
+body[data-theme="dark"] .task-priority,
+body[data-theme="dark"] .task-due-date {
+    background: #0f172a;
+    color: #f8fafc;
+    border-color: #64748b;
+}
+body[data-theme="dark"] .task,
+body[data-theme="dark"] .history-item { border-color: #475569; }
+body[data-theme="dark"] .progress-track { background: #475569; }
+body[data-theme="dark"] .task-filter {
+    background: #475569;
+    color: #e2e8f0;
+    border-color: #64748b;
+}
+body[data-theme="dark"] .task-filter.active {
+    background: #2563eb;
+    color: #fff;
+    border-color: #3b82f6;
+}
+body[data-theme="dark"] .priority-high { background: #451a1a; }
+body[data-theme="dark"] .priority-medium { background: #422006; }
+body[data-theme="dark"] .priority-low { background: #123524; }
+body[data-theme="dark"] .due-overdue { background: #7f1d1d; color: #fecaca; }
+body[data-theme="dark"] .due-today { background: #78350f; color: #fde68a; }
+body[data-theme="dark"] .due-upcoming { background: #1e3a8a; color: #bfdbfe; }
+body[data-theme="dark"] .due-later { background: #14532d; color: #bbf7d0; }
+body[data-theme="dark"] .deadline-today { background: #7f1d1d; color: #fecaca; }
+body[data-theme="dark"] .deadline-tomorrow { background: #78350f; color: #fde68a; }
+body[data-theme="dark"] .deadline-weekend { background: #1e3a8a; color: #bfdbfe; }
+body[data-theme="dark"] .deadline-next { background: #14532d; color: #bbf7d0; }
+body[data-theme="dark"] .validation-card {
+    background: #422006;
+    color: #fef3c7;
+    border-color: #d97706;
+}
+#themeToggle { margin-top: 8px; }
+
 </style>
 </head>
 
@@ -437,6 +503,7 @@ button:disabled {
 <header>
     <h1>AI Workmate</h1>
     <p>Your personal AI-powered workspace</p>
+    <button type="button" class="secondary" id="themeToggle" onclick="toggleTheme()" aria-pressed="true">Switch to Light Mode</button>
 </header>
 
 <div class="dashboard">
@@ -733,7 +800,45 @@ function restoreWorkspaceBackup(event) {
                 throw new Error("Browser storage could not save the restored sessions. Existing history was not intentionally replaced.");
             }
 
-            renderHistory();
+            
+function applyTheme(theme) {
+    var selectedTheme = theme === "light" ? "light" : "dark";
+    document.body.setAttribute("data-theme", selectedTheme);
+    var button = document.getElementById("themeToggle");
+    if (button) {
+        button.textContent = selectedTheme === "dark"
+            ? "Switch to Light Mode"
+            : "Switch to Dark Mode";
+        button.setAttribute("aria-pressed", selectedTheme === "dark" ? "true" : "false");
+    }
+}
+
+function toggleTheme() {
+    var currentTheme = document.body.getAttribute("data-theme") || "dark";
+    var nextTheme = currentTheme === "dark" ? "light" : "dark";
+    try {
+        localStorage.setItem("workmateTheme", nextTheme);
+    } catch (error) {
+        // The theme still changes for this page even if storage is unavailable.
+    }
+    applyTheme(nextTheme);
+}
+
+function initialiseTheme() {
+    var savedTheme = "dark";
+    try {
+        var storedTheme = localStorage.getItem("workmateTheme");
+        if (storedTheme === "light" || storedTheme === "dark") {
+            savedTheme = storedTheme;
+        }
+    } catch (error) {
+        // Keep the default dark theme when storage is unavailable.
+    }
+    applyTheme(savedTheme);
+}
+
+initialiseTheme();
+renderHistory();
             status.textContent = "Restore complete. Added " + added +
                 " new session(s); existing sessions were kept.";
         } catch (error) {
