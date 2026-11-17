@@ -1517,6 +1517,7 @@ function renderHistory() {
         title.className = "history-title";
 
         title.textContent =
+            session.title ||
             (session.notes || "").substring(0, 65) ||
             "Untitled session";
 
@@ -1533,6 +1534,12 @@ function renderHistory() {
                 "Previous session opened.";
         };
 
+        var renameButton = document.createElement("button");
+        renameButton.textContent = "Rename";
+        renameButton.onclick = function() {
+            renameSession(session.id);
+        };
+
         var deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.className = "delete";
@@ -1544,10 +1551,54 @@ function renderHistory() {
         item.appendChild(title);
         item.appendChild(date);
         item.appendChild(openButton);
+        item.appendChild(renameButton);
         item.appendChild(deleteButton);
 
         container.appendChild(item);
     });
+}
+
+function renameSession(id) {
+    var history = getHistory();
+    var session = null;
+
+    for (var i = 0; i < history.length; i++) {
+        if (history[i].id === id) {
+            session = history[i];
+            break;
+        }
+    }
+
+    if (!session) return;
+
+    var currentTitle = session.title ||
+        (session.notes || "").substring(0, 65) ||
+        "Untitled session";
+
+    var newTitle = prompt("Enter a name for this session:", currentTitle);
+
+    if (newTitle === null) return;
+
+    newTitle = newTitle.trim();
+
+    if (!newTitle) {
+        alert("Session name cannot be empty.");
+        return;
+    }
+
+    session.title = newTitle;
+    session.updated = new Date().toLocaleString();
+
+    if (currentSession && currentSession.id === id) {
+        currentSession.title = newTitle;
+        currentSession.updated = session.updated;
+    }
+
+    if (saveHistory(history)) {
+        renderHistory();
+        document.getElementById("status").textContent =
+            "Session renamed successfully.";
+    }
 }
 
 function deleteSession(id) {
