@@ -559,6 +559,13 @@ button:disabled {
 
 <div class="history-card">
     <h2>Saved History</h2>
+    <div class="backup-controls">
+        <p>Protect your saved sessions by downloading a backup. You can restore it later or on another device.</p>
+        <button class="secondary" type="button" onclick="exportWorkspaceBackup()">Export Backup</button>
+        <button class="secondary" type="button" onclick="document.getElementById('restoreBackupFile').click()">Restore Backup</button>
+        <input id="restoreBackupFile" type="file" accept=".json,application/json" style="display:none" onchange="restoreWorkspaceBackup(event)">
+        <p id="backupStatus" role="status" aria-live="polite"></p>
+    </div>
     <div id="historyList"></div>
 </div>
 
@@ -640,6 +647,106 @@ function extractSection(answer, title, nextTitle) {
     if (end === -1) end = answer.length;
 
     return answer.substring(start, end).trim();
+}
+
+function exportWorkspaceBackup() {
+    var history = getHistory();
+    var backup = {
+        app: "AI Workmate",
+        backupVersion: 1,
+        exportedAt: new Date().toISOString(),
+        sessions: history
+    };
+    try {
+        var blob = new Blob([JSON.stringify(backup, null, 2)], {
+            type: "application/json"
+        });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "ai-workmate-backup-" +
+            new Date().toISOString().replace(/[:.]/g, "-") + ".json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        document.getElementById("backupStatus").textContent =
+            "Backup exported: " + history.length + " saved session(s).";
+    } catch (error) {
+        document.getElementById("backupStatus").textContent =
+            "Could not export backup: " + error.message;
+    }
+}
+
+function restoreWorkspaceBackup(event) {
+    var fileInput = event.target;
+    var file = fileInput.files && fileInput.files[0];
+    var status = document.getElementById("backupStatus");
+    if (!file) return;
+
+    var reader = new FileReader();
+    reader.onload = function() {
+        try {
+            var backup = JSON.parse(reader.result);
+            if (!backup || backup.app !== "AI Workmate" ||
+                backup.backupVersion !== 1 || !Array.isArray(backup.sessions)) {
+                throw new Error("This is not a valid AI Workmate backup.");
+            }
+
+            for (var i = 0; i < backup.sessions.length; i++) {
+                var session = backup.sessions[i];
+                if (!session || typeof session !== "object" ||
+                    typeof session.id !== "string" || !session.id.trim() ||
+                    (session.tasks !== undefined && !Array.isArray(session.tasks))) {
+                    throw new Error("The backup contains an invalid session at position " + (i + 1) + ".");
+                }
+            }
+
+            var rawCurrent = localStorage.getItem("workmateHistory");
+            var current;
+            if (rawCurrent === null || rawCurrent === "") {
+                current = [];
+            } else {
+                current = JSON.parse(rawCurrent);
+                if (!Array.isArray(current)) {
+                    throw new Error("Your existing saved history is unreadable. Nothing was changed.");
+                }
+            }
+
+            var knownIds = {};
+            current.forEach(function(session) {
+                if (session && typeof session.id === "string") {
+                    knownIds[session.id] = true;
+                }
+            });
+
+            var added = 0;
+            backup.sessions.forEach(function(session) {
+                if (!knownIds[session.id]) {
+                    current.push(session);
+                    knownIds[session.id] = true;
+                    added++;
+                }
+            });
+
+            if (!saveHistory(current)) {
+                throw new Error("Browser storage could not save the restored sessions. Existing history was not intentionally replaced.");
+            }
+
+            renderHistory();
+            status.textContent = "Restore complete. Added " + added +
+                " new session(s); existing sessions were kept.";
+        } catch (error) {
+            status.textContent = "Restore failed: " + error.message;
+        } finally {
+            fileInput.value = "";
+        }
+    };
+    reader.onerror = function() {
+        status.textContent = "Could not read the selected backup file.";
+        fileInput.value = "";
+    };
+    reader.readAsText(file);
 }
 
 function getHistory() {
