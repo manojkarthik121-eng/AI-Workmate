@@ -801,43 +801,7 @@ function restoreWorkspaceBackup(event) {
             }
 
             
-function applyTheme(theme) {
-    var selectedTheme = theme === "light" ? "light" : "dark";
-    document.body.setAttribute("data-theme", selectedTheme);
-    var button = document.getElementById("themeToggle");
-    if (button) {
-        button.textContent = selectedTheme === "dark"
-            ? "Switch to Light Mode"
-            : "Switch to Dark Mode";
-        button.setAttribute("aria-pressed", selectedTheme === "dark" ? "true" : "false");
-    }
-}
 
-function toggleTheme() {
-    var currentTheme = document.body.getAttribute("data-theme") || "dark";
-    var nextTheme = currentTheme === "dark" ? "light" : "dark";
-    try {
-        localStorage.setItem("workmateTheme", nextTheme);
-    } catch (error) {
-        // The theme still changes for this page even if storage is unavailable.
-    }
-    applyTheme(nextTheme);
-}
-
-function initialiseTheme() {
-    var savedTheme = "dark";
-    try {
-        var storedTheme = localStorage.getItem("workmateTheme");
-        if (storedTheme === "light" || storedTheme === "dark") {
-            savedTheme = storedTheme;
-        }
-    } catch (error) {
-        // Keep the default dark theme when storage is unavailable.
-    }
-    applyTheme(savedTheme);
-}
-
-initialiseTheme();
 renderHistory();
             status.textContent = "Restore complete. Added " + added +
                 " new session(s); existing sessions were kept.";
@@ -1673,6 +1637,43 @@ async function organiseNotes() {
     }
 }
 
+function applyTheme(theme) {
+    var selectedTheme = theme === "light" ? "light" : "dark";
+    document.body.setAttribute("data-theme", selectedTheme);
+    var button = document.getElementById("themeToggle");
+    if (button) {
+        button.textContent = selectedTheme === "dark"
+            ? "Switch to Light Mode"
+            : "Switch to Dark Mode";
+        button.setAttribute("aria-pressed", selectedTheme === "dark" ? "true" : "false");
+    }
+}
+
+function toggleTheme() {
+    var currentTheme = document.body.getAttribute("data-theme") || "dark";
+    var nextTheme = currentTheme === "dark" ? "light" : "dark";
+    try {
+        localStorage.setItem("workmateTheme", nextTheme);
+    } catch (error) {
+        // The theme still changes for this page even if storage is unavailable.
+    }
+    applyTheme(nextTheme);
+}
+
+function initialiseTheme() {
+    var savedTheme = "dark";
+    try {
+        var storedTheme = localStorage.getItem("workmateTheme");
+        if (storedTheme === "light" || storedTheme === "dark") {
+            savedTheme = storedTheme;
+        }
+    } catch (error) {
+        // Keep the default dark theme when storage is unavailable.
+    }
+    applyTheme(savedTheme);
+}
+
+initialiseTheme();
 renderHistory();
 </script>
 
