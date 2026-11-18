@@ -633,6 +633,13 @@ body[data-theme="dark"] .validation-card {
         <input id="restoreBackupFile" type="file" accept=".json,application/json" style="display:none" onchange="restoreWorkspaceBackup(event)">
         <p id="backupStatus" role="status" aria-live="polite"></p>
     </div>
+    <input
+        type="search"
+        id="historySearch"
+        placeholder="Search saved sessions by name or notes..."
+        aria-label="Search saved sessions"
+        oninput="renderHistory()"
+    >
     <div id="historyList"></div>
 </div>
 
@@ -1497,6 +1504,10 @@ function updateDashboard(history) {
 function renderHistory() {
     var history = getHistory();
     var container = document.getElementById("historyList");
+    var searchInput = document.getElementById("historySearch");
+    var searchTerm = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : "";
 
     updateDashboard(history);
     container.innerHTML = "";
@@ -1507,9 +1518,25 @@ function renderHistory() {
         return;
     }
 
+    var filteredHistory = history.filter(function(session) {
+        var searchableText = [
+            session.title || "",
+            session.notes || "",
+            session.summary || ""
+        ].join(" ").toLowerCase();
+
+        return searchableText.indexOf(searchTerm) !== -1;
+    });
+
+    if (filteredHistory.length === 0) {
+        container.textContent = "No sessions match your search.";
+        container.className = "empty-history";
+        return;
+    }
+
     container.className = "";
 
-    history.forEach(function(session) {
+    filteredHistory.forEach(function(session) {
         var item = document.createElement("div");
         item.className = "history-item";
 
