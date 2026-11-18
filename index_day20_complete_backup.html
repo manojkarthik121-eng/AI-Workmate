@@ -640,6 +640,11 @@ body[data-theme="dark"] .validation-card {
         aria-label="Search saved sessions"
         oninput="renderHistory()"
     >
+    <label for="historySort">Sort saved sessions:</label>
+    <select id="historySort" onchange="renderHistory()">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+    </select>
     <div id="historyList"></div>
 </div>
 
@@ -1455,7 +1460,12 @@ function saveCurrentSession() {
         }
     }
 
-    if (!found) history.unshift(currentSession);
+    if (found) {
+        history = history.filter(function(session) {
+            return session.id !== currentSession.id;
+        });
+    }
+    history.unshift(currentSession);
 
     if (saveHistory(history)) {
         renderHistory();
@@ -1532,6 +1542,11 @@ function renderHistory() {
         container.textContent = "No sessions match your search.";
         container.className = "empty-history";
         return;
+    }
+
+    var sortInput = document.getElementById("historySort");
+    if (sortInput && sortInput.value === "oldest") {
+        filteredHistory.reverse();
     }
 
     container.className = "";
@@ -1620,6 +1635,11 @@ function renameSession(id) {
         currentSession.title = newTitle;
         currentSession.updated = session.updated;
     }
+
+    history = history.filter(function(item) {
+        return item.id !== id;
+    });
+    history.unshift(session);
 
     if (saveHistory(history)) {
         renderHistory();
