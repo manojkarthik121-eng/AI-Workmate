@@ -20,26 +20,23 @@ AI Workmate is a personal AI workspace assistant that turns notes into an organi
 
 ## Run locally on Windows
 
-The repository currently stores the latest frontend and backend as backup-named files. To run the app:
-
-1. Download `index_day20_complete_backup.html` and `app_day16_complete_backup.py` from this repository into the same folder.
-2. Rename the HTML file to `index.html`.
-3. Rename the Python file to `app.py`.
-4. Install Python 3.8 or later if it is not already installed.
-5. Open Command Prompt in that folder.
-6. Set your Gemini API key for that Command Prompt window:
+1. Download the repository using **Code → Download ZIP**, then extract it.
+2. Make sure `index.html` and `app.py` are in the same folder.
+3. Install Python 3.8 or later if it is not already installed.
+4. Open Command Prompt in that folder.
+5. Set your Gemini API key for that Command Prompt window:
 
    ```bat
    set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
    ```
 
-7. Start the server:
+6. Start the server:
 
    ```bat
    python app.py
    ```
 
-8. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+7. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 Keep the Command Prompt window open while using the app. Press `Ctrl+C` in that window to stop the server.
 
