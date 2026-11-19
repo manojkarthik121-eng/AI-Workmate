@@ -57,6 +57,10 @@ Keep the Command Prompt window open while using the app. Press `Ctrl+C` in that 
 
 AI Workmate is an actively developed project. The local workflow and core features are being tested and refined ahead of a wider public release. This repository is currently a source-code showcase and local-run setup; it is not a hosted multi-user service.
 
+## Privacy
+
+Read the [AI Workmate Privacy Notice](PRIVACY.md) to understand local storage, Gemini API processing, and backup-file handling.
+
 ## Feedback
 
 If you try AI Workmate, feedback on usability, reliability, and the note-to-action workflow is welcome.
