@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Workmate — Day 22 Theme Settings</title>
+<title>AI Workmate — Your AI Workspace</title>
 
 <style>
 * {
@@ -493,6 +493,267 @@ body[data-theme="dark"] .validation-card {
     border-color: #d97706;
 }
 #themeToggle { margin-top: 8px; }
+
+
+/* AI Workmate visual refresh — presentation only; existing behaviour preserved */
+:root {
+    color-scheme: dark;
+    --wm-bg: #090e1a;
+    --wm-panel: #111a2b;
+    --wm-panel-2: #172338;
+    --wm-border: #263650;
+    --wm-text: #e8eef8;
+    --wm-muted: #91a2ba;
+    --wm-accent: #7c9cff;
+    --wm-accent-strong: #5c7cfa;
+    --wm-radius: 18px;
+}
+html { scroll-behavior: smooth; }
+body[data-theme="dark"] {
+    background:
+        radial-gradient(ellipse at 12% 0%, rgba(77, 105, 190, .15), transparent 34%),
+        radial-gradient(ellipse at 90% 8%, rgba(39, 160, 170, .08), transparent 28%),
+        var(--wm-bg);
+    color: var(--wm-text);
+    padding: 34px 22px 60px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+}
+.container { max-width: 1120px; }
+header {
+    position: relative;
+    padding: 12px 2px 26px;
+    margin-bottom: 8px;
+}
+header h1 {
+    color: #f4f7ff !important;
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -1.5px;
+    margin: 0 0 8px;
+    font-weight: 750;
+}
+header p { color: var(--wm-muted) !important; margin: 0; font-size: 15px; }
+#themeToggle {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    margin: 0;
+}
+body[data-theme="dark"] .dashboard,
+body[data-theme="dark"] .input-card,
+body[data-theme="dark"] .result-card,
+body[data-theme="dark"] .history-card {
+    background: linear-gradient(145deg, rgba(20,31,50,.98), rgba(15,24,40,.98));
+    border: 1px solid var(--wm-border);
+    border-radius: var(--wm-radius);
+    box-shadow: 0 14px 38px rgba(0,0,0,.20);
+    padding: clamp(18px, 3vw, 28px);
+    margin-bottom: 20px;
+}
+h2 {
+    color: #f0f4ff;
+    font-size: 20px;
+    letter-spacing: -.35px;
+    margin: 0 0 18px;
+}
+h3 { color: #e4ebfa; letter-spacing: -.15px; }
+.stats { gap: 12px; }
+body[data-theme="dark"] .stat-card {
+    background: linear-gradient(145deg, #1b2941, #172338);
+    border: 1px solid #2b3c58;
+    border-radius: 14px;
+    padding: 17px 12px;
+}
+body[data-theme="dark"] .stat-card h3 {
+    color: #9eafc8;
+    font-size: 12px;
+    font-weight: 650;
+    letter-spacing: .35px;
+    text-transform: uppercase;
+}
+body[data-theme="dark"] .stat-card p {
+    color: #f3f6ff;
+    font-size: 29px;
+    letter-spacing: -.8px;
+}
+.progress-section { margin-top: 22px; }
+.progress-label { color: #cbd7e9; }
+body[data-theme="dark"] .progress-track {
+    height: 9px;
+    background: #263650;
+    border-radius: 99px;
+}
+.progress-fill {
+    background: linear-gradient(90deg, #6688ff, #5bd0c4);
+    border-radius: 99px;
+}
+body[data-theme="dark"] textarea,
+body[data-theme="dark"] input[type="search"],
+body[data-theme="dark"] .task-search,
+body[data-theme="dark"] .task-sort,
+body[data-theme="dark"] .task-priority,
+body[data-theme="dark"] .task-due-date,
+body[data-theme="dark"] #historySort {
+    background: #0b1423;
+    color: #edf3ff;
+    border: 1px solid #30425f;
+    border-radius: 11px;
+    outline: none;
+}
+body[data-theme="dark"] textarea {
+    min-height: 190px;
+    padding: 17px 18px;
+    font: inherit;
+    line-height: 1.65;
+    resize: vertical;
+}
+body[data-theme="dark"] textarea:focus,
+body[data-theme="dark"] input:focus,
+body[data-theme="dark"] select:focus {
+    border-color: #7896ff;
+    box-shadow: 0 0 0 3px rgba(120,150,255,.13);
+}
+body[data-theme="dark"] textarea::placeholder,
+body[data-theme="dark"] input::placeholder { color: #71839e; }
+button {
+    border-radius: 10px;
+    padding: 10px 15px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: .05px;
+    background: var(--wm-accent-strong);
+    box-shadow: 0 4px 12px rgba(50,80,180,.15);
+    transition: transform .15s ease, filter .15s ease, border-color .15s ease;
+}
+button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+button:active { transform: translateY(0); }
+button:focus-visible { outline: 2px solid #a8bbff; outline-offset: 3px; }
+button.secondary {
+    background: #263650;
+    color: #e5edfc;
+    border: 1px solid #3a4e6d;
+    box-shadow: none;
+}
+button.delete, button.delete-task, button.bulk-delete-button,
+button.clear-completed-button { background: #8f3546; }
+#organiseButton {
+    padding: 12px 21px;
+    background: linear-gradient(110deg, #6688ff, #536ee7);
+    font-size: 14px;
+}
+#status, #backupStatus {
+    color: #a9bad2 !important;
+    min-height: 20px;
+}
+body[data-theme="dark"] .section {
+    background: rgba(9,17,30,.48);
+    border: 1px solid #263650;
+    border-radius: 14px;
+    padding: 20px;
+    margin: 15px 0;
+}
+body[data-theme="dark"] .section h3 {
+    font-size: 16px;
+    margin: 0 0 15px;
+    color: #dce7fa;
+}
+body[data-theme="dark"] .section p,
+body[data-theme="dark"] .history-date { color: #94a7c2; }
+.task { padding: 13px 4px; border-color: #293a54; }
+.task-text { color: #e2eaf8; }
+.task-actions button { border-radius: 8px; }
+body[data-theme="dark"] .task-filter {
+    border-radius: 9px;
+    background: #1b2940;
+    border-color: #344866;
+}
+body[data-theme="dark"] .task-filter.active {
+    background: #526fdf;
+    border-color: #7893ff;
+}
+body[data-theme="dark"] .bulk-task-tools {
+    background: #17243a;
+    border: 1px solid #2b3d59;
+    border-radius: 12px;
+    padding: 13px;
+}
+body[data-theme="dark"] .bulk-selection-count { color: #cbd7e9; }
+body[data-theme="dark"] .priority-item {
+    border: 1px solid #30415c;
+    border-left-width: 4px;
+    border-radius: 11px;
+    padding: 14px 16px;
+}
+body[data-theme="dark"] .priority-high { border-left-color: #f06d7d; background: rgba(126,39,56,.20); }
+body[data-theme="dark"] .priority-medium { border-left-color: #e8b45d; background: rgba(130,88,24,.18); }
+body[data-theme="dark"] .priority-low { border-left-color: #55c59a; background: rgba(24,104,75,.18); }
+body[data-theme="dark"] .validation-card {
+    background: rgba(117,78,23,.17);
+    border: 1px solid #8c682f;
+    border-left: 4px solid #d7a64b;
+    border-radius: 12px;
+}
+body[data-theme="dark"] .history-item {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    gap: 5px 14px;
+    align-items: center;
+    padding: 17px 15px;
+    margin: 10px 0;
+    border: 1px solid #293b56;
+    border-radius: 13px;
+    background: rgba(9,17,30,.38);
+}
+.history-title { color: #edf3ff; font-size: 15px; }
+.history-date { grid-column: 1; }
+.history-item button { grid-row: 1 / span 2; grid-column: 2; margin: 0 0 0 5px; }
+.history-item button + button { margin-left: 5px; }
+#historySearch {
+    width: min(100%, 520px);
+    padding: 12px 14px;
+    margin: 0 12px 14px 0;
+}
+#historySort {
+    min-width: 150px;
+    padding: 11px 12px;
+    margin: 0 0 14px;
+}
+.history-card > label { color: #9eafc8; font-size: 13px; margin-right: 8px; }
+.backup-controls {
+    padding: 14px 16px;
+    margin-bottom: 17px;
+    border: 1px solid #293b56;
+    border-radius: 13px;
+    background: rgba(9,17,30,.34);
+}
+.backup-controls p { color: #91a2ba; margin-top: 0; }
+.empty-history { padding: 20px 4px; color: #91a2ba !important; }
+@media (max-width: 700px) {
+    body[data-theme="dark"] { padding: 20px 12px 40px; }
+    header { padding-top: 8px; padding-bottom: 22px; }
+    header h1 { font-size: 30px; padding-right: 110px; }
+    #themeToggle { top: 7px; font-size: 11px; padding: 9px 10px; }
+    .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    body[data-theme="dark"] .history-item {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+    .history-date { grid-column: 1; }
+    .history-item button {
+        grid-row: auto;
+        grid-column: auto;
+        margin: 7px 6px 0 0;
+    }
+    #historySearch { width: 100%; margin-right: 0; }
+    #historySort { width: 100%; }
+    .task-tools { align-items: stretch; }
+    .task-sort { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
 
 </style>
 </head>
