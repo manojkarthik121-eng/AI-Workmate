@@ -23,6 +23,8 @@ AI Workmate is a personal AI workspace assistant that turns notes into an organi
 1. Download the repository using **Code → Download ZIP**, then extract it.
 2. Make sure `index.html` and `app.py` are in the same folder.
 3. Install Python 3.8 or later if it is not already installed.
+
+   No third-party Python packages are required.
 4. Open Command Prompt in that folder.
 5. Set your Gemini API key for that Command Prompt window:
 
