@@ -24,7 +24,6 @@ def send_json(handler, status, data):
     handler.send_response(status)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header("Content-Length", str(len(response)))
-    handler.send_header("Access-Control-Allow-Origin", "*")
     handler.end_headers()
     handler.wfile.write(response)
 
@@ -1041,6 +1040,22 @@ USER'S NOTES:
 class WorkmateHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
+
+        # Accept browser requests only from the local app's own origins.
+        # Requests from other websites are rejected before notes reach Gemini.
+        origin = self.headers.get("Origin")
+        allowed_origins = {
+            "http://127.0.0.1:8000",
+            "http://localhost:8000"
+        }
+
+        if origin and origin not in allowed_origins:
+            send_json(
+                self,
+                403,
+                {"error": "Request origin not allowed."}
+            )
+            return
 
         if self.path != "/organise":
             send_json(
