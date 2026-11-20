@@ -1042,6 +1042,22 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
 
+        # Accept requests only when addressed to the local app host.
+        # This helps prevent DNS-rebinding style access to the local server.
+        host = self.headers.get("Host", "")
+        allowed_hosts = {
+            "127.0.0.1:8000",
+            "localhost:8000"
+        }
+
+        if host.lower() not in allowed_hosts:
+            send_json(
+                self,
+                403,
+                {"error": "Request host not allowed."}
+            )
+            return
+
         # Accept browser requests only from the local app's own origins.
         # Requests from other websites are rejected before notes reach Gemini.
         origin = self.headers.get("Origin")
