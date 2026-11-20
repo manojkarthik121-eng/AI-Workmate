@@ -1114,6 +1114,16 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
             )
             return
 
+        # This handler accepts only standard Content-Length bodies.
+        # Reject chunked transfer encoding rather than processing an unsupported body format.
+        if self.headers.get("Transfer-Encoding"):
+            send_json(
+                self,
+                400,
+                {"error": "Transfer-Encoding is not supported."}
+            )
+            return
+
         try:
             try:
                 content_length = int(
@@ -1145,9 +1155,17 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
 
             raw_data = self.rfile.read(content_length)
 
-            received_data = json.loads(
-                raw_data.decode("utf-8")
-            )
+            try:
+                received_data = json.loads(
+                    raw_data.decode("utf-8")
+                )
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                send_json(
+                    self,
+                    400,
+                    {"error": "Invalid JSON request body."}
+                )
+                return
 
             user_text = (
                 received_data.get("text")
