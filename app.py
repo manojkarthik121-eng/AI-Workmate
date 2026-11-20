@@ -10,6 +10,7 @@ import urllib.error
 
 HOST = "127.0.0.1"
 PORT = 8000
+MAX_REQUEST_BYTES = 1024 * 1024  # 1 MiB limit for incoming note requests
 
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -1066,9 +1067,33 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
             return
 
         try:
-            content_length = int(
-                self.headers.get("Content-Length", 0)
-            )
+            try:
+                content_length = int(
+                    self.headers.get("Content-Length", 0)
+                )
+            except (TypeError, ValueError):
+                send_json(
+                    self,
+                    400,
+                    {"error": "Invalid Content-Length header."}
+                )
+                return
+
+            if content_length < 0:
+                send_json(
+                    self,
+                    400,
+                    {"error": "Invalid request size."}
+                )
+                return
+
+            if content_length > MAX_REQUEST_BYTES:
+                send_json(
+                    self,
+                    413,
+                    {"error": "Request is too large. Please shorten your notes and try again."}
+                )
+                return
 
             raw_data = self.rfile.read(content_length)
 
