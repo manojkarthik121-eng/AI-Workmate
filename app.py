@@ -1157,12 +1157,14 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
 
         except Exception as error:
 
+            # Keep diagnostic details in the local server console only.
+            # Do not expose internal exception text to the browser.
             print("Error:", str(error))
 
             send_json(
                 self,
                 500,
-                {"error": str(error)}
+                {"error": "Something went wrong while organising your notes. Please try again."}
             )
 
 
