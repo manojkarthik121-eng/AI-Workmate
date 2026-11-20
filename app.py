@@ -1040,6 +1040,38 @@ USER'S NOTES:
 
 class WorkmateHandler(SimpleHTTPRequestHandler):
 
+    def do_GET(self):
+        # Apply the same local Host restriction to static-file requests.
+        host = self.headers.get("Host", "")
+        allowed_hosts = {
+            "127.0.0.1:8000",
+            "localhost:8000"
+        }
+
+        if host.lower() not in allowed_hosts:
+            send_json(
+                self,
+                403,
+                {"error": "Request host not allowed."}
+            )
+            return
+
+        super().do_GET()
+
+    def do_HEAD(self):
+        # HEAD can also expose static-file metadata, so validate it too.
+        host = self.headers.get("Host", "")
+        allowed_hosts = {
+            "127.0.0.1:8000",
+            "localhost:8000"
+        }
+
+        if host.lower() not in allowed_hosts:
+            self.send_error(403, "Request host not allowed.")
+            return
+
+        super().do_HEAD()
+
     def do_POST(self):
 
         # Accept requests only when addressed to the local app host.
