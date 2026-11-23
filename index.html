@@ -247,8 +247,7 @@ button:disabled {
     gap: 5px;
     flex-shrink: 0;
 }
-.task-actions button {
-    margin: 0;
+.task-actions button {    margin: 0;
     padding: 6px 9px;
     font-size: 12px;
 }
@@ -497,8 +496,7 @@ body[data-theme="dark"] .validation-card {
 
 /* AI Workmate visual refresh — presentation only; existing behaviour preserved */
 :root {
-    color-scheme: dark;
-    --wm-bg: #090e1a;
+    color-scheme: dark;    --wm-bg: #090e1a;
     --wm-panel: #111a2b;
     --wm-panel-2: #172338;
     --wm-border: #263650;
@@ -747,8 +745,7 @@ body[data-theme="dark"] .history-item {
         grid-row: auto;
         grid-column: auto !important;
         margin: 4px 0 0;
-        padding: 9px 7px;
-    }
+        padding: 9px 7px;    }
     #historySearch { width: 100%; margin-right: 0; }
     #historySort { width: 100%; }
     .task-tools { align-items: stretch; }
@@ -766,7 +763,8 @@ body[data-theme="dark"] .history-item {
 
 <header>
     <h1>AI Workmate</h1>
-    <p>Your personal AI-powered workspace</p>
+    <p>Turn scattered thoughts into a clear plan.</p>
+    <p>Dump your notes, tasks, ideas, reminders, or plans below. AI Workmate will organise them into a summary, actionable tasks, priorities, and next steps.</p>
     <button type="button" class="secondary" id="themeToggle" onclick="toggleTheme()" aria-pressed="true">Switch to Light Mode</button>
 </header>
 
@@ -809,9 +807,10 @@ body[data-theme="dark"] .history-item {
 
 <div class="input-card">
     <h2>What are you working on?</h2>
+    <p>Write naturally. No need to organise your thoughts first.</p>
 
     <textarea id="notes"
-        placeholder="Write your notes, tasks, plans or ideas here..."></textarea>
+        placeholder="Example: I need to finish my project, reply to two messages, buy groceries, and figure out what to do tomorrow..."></textarea>
 
     <br>
 
@@ -997,8 +996,7 @@ function exportWorkspaceBackup() {
     var backup = {
         app: "AI Workmate",
         backupVersion: 1,
-        exportedAt: new Date().toISOString(),
-        sessions: history
+        exportedAt: new Date().toISOString(),        sessions: history
     };
     try {
         var blob = new Blob([JSON.stringify(backup, null, 2)], {
@@ -1247,8 +1245,7 @@ function setTaskFilter(filter) {
 
 function setTaskSort(sort) {
     var allowed = ["due-asc", "priority", "pending-first", "completed-first"];
-    if (allowed.indexOf(sort) === -1) return;
-    currentTaskSort = sort;
+    if (allowed.indexOf(sort) === -1) return;    currentTaskSort = sort;
     if (currentSession) renderTasks(currentSession.tasks || []);
 }
 
@@ -1497,8 +1494,7 @@ function addTask() {
 function editTask(item) {
     if (!currentSession) return;
 
-    var updatedText = prompt("Edit this task:", item.text);
-    if (updatedText === null) return;
+    var updatedText = prompt("Edit this task:", item.text);    if (updatedText === null) return;
 
     updatedText = updatedText.trim();
     if (!updatedText) {
@@ -1747,8 +1743,7 @@ function updateDashboard(history) {
             totalTasks++;
 
             if (task.done) {
-                completedTasks++;
-            }
+                completedTasks++;            }
         });
     });
 
@@ -1998,7 +1993,6 @@ async function organiseNotes() {
         button.disabled = false;
     }
 }
-
 function applyTheme(theme) {
     var selectedTheme = theme === "light" ? "light" : "dark";
     document.body.setAttribute("data-theme", selectedTheme);
@@ -2041,4 +2035,3 @@ renderHistory();
 
 </body>
 </html>
-
