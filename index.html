@@ -247,8 +247,7 @@ button:disabled {
     gap: 5px;
     flex-shrink: 0;
 }
-.task-actions button {    margin: 0;    padding: 6px 9px;
-    font-size: 12px;
+.task-actions button {    margin: 0;    padding: 6px 9px;    font-size: 12px;
 }
 .task-priority {
     max-width: 95px;
@@ -497,8 +496,7 @@ body[data-theme="dark"] .validation-card {
 :root {
     color-scheme: dark;    --wm-bg: #090e1a;
     --wm-panel: #111a2b;    --wm-panel-2: #172338;
-    --wm-border: #263650;
-    --wm-text: #e8eef8;
+    --wm-border: #263650;    --wm-text: #e8eef8;
     --wm-muted: #91a2ba;
     --wm-accent: #7c9cff;
     --wm-accent-strong: #5c7cfa;
@@ -747,8 +745,7 @@ body[data-theme="dark"] .history-item {
     #historySearch { width: 100%; margin-right: 0; }
     #historySort { width: 100%; }    .task-tools { align-items: stretch; }
     .task-sort { max-width: 100%; }
-}
-@media (prefers-reduced-motion: reduce) {
+}@media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
 
@@ -823,10 +820,10 @@ body[data-theme="dark"] .history-item {
         </div>
         <div id="progress"></div>
         <button class="secondary add-task-button" onclick="addTask()">Add task</button>
-        <p class="history-date">Set a due date beside any task. Overdue, due today, and upcoming dates are labelled automatically.</p>
+        <p class="history-date">Set due dates beside tasks; overdue, due today, and upcoming dates are labelled automatically. Change priorities using each task's dropdown.</p>
     </div>
 
-    <div class="section">
+    <div class="section" id="prioritiesSection" style="display:none;">
         <h3>Priorities</h3>
         <div id="priorities"></div>
         <p class="history-date">Priorities stay synchronised with your Action Items. You can change a task's priority using its dropdown.</p>
@@ -997,8 +994,7 @@ function exportWorkspaceBackup() {
     };    try {
         var blob = new Blob([JSON.stringify(backup, null, 2)], {
             type: "application/json"
-        });
-        var url = URL.createObjectURL(blob);
+        });        var url = URL.createObjectURL(blob);
         var link = document.createElement("a");
         link.href = url;
         link.download = "ai-workmate-backup-" +
@@ -1247,8 +1243,7 @@ function setTaskSort(sort) {
 function sortVisibleTasks(tasks) {
     var priorityRank = {HIGH: 0, MEDIUM: 1, LOW: 2};
     return tasks.slice().sort(function(a, b) {
-        if (currentTaskSort === "priority") {
-            return (priorityRank[a.priority || "MEDIUM"] - priorityRank[b.priority || "MEDIUM"]);
+        if (currentTaskSort === "priority") {            return (priorityRank[a.priority || "MEDIUM"] - priorityRank[b.priority || "MEDIUM"]);
         }
         if (currentTaskSort === "pending-first") {
             return Number(!!a.done) - Number(!!b.done);
@@ -1497,8 +1492,7 @@ function editTask(item) {
         return;
     }
 
-    item.text = updatedText;
-    syncPriorities();
+    item.text = updatedText;    syncPriorities();
     renderTasks(currentSession.tasks);
     saveCurrentSession();
     document.getElementById("status").textContent = "Task updated.";
@@ -1748,7 +1742,6 @@ function updateDashboard(history) {
 
     document.getElementById("completedTasks").textContent =
         completedTasks;
-
     document.getElementById("pendingTasks").textContent =
         totalTasks - completedTasks;
 
@@ -1997,8 +1990,7 @@ function applyTheme(theme) {
     }
 }
 
-function toggleTheme() {
-    var currentTheme = document.body.getAttribute("data-theme") || "dark";
+function toggleTheme() {    var currentTheme = document.body.getAttribute("data-theme") || "dark";
     var nextTheme = currentTheme === "dark" ? "light" : "dark";
     try {
         localStorage.setItem("workmateTheme", nextTheme);
