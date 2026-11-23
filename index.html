@@ -247,8 +247,7 @@ button:disabled {
     gap: 5px;
     flex-shrink: 0;
 }
-.task-actions button {    margin: 0;
-    padding: 6px 9px;
+.task-actions button {    margin: 0;    padding: 6px 9px;
     font-size: 12px;
 }
 .task-priority {
@@ -497,8 +496,7 @@ body[data-theme="dark"] .validation-card {
 /* AI Workmate visual refresh — presentation only; existing behaviour preserved */
 :root {
     color-scheme: dark;    --wm-bg: #090e1a;
-    --wm-panel: #111a2b;
-    --wm-panel-2: #172338;
+    --wm-panel: #111a2b;    --wm-panel-2: #172338;
     --wm-border: #263650;
     --wm-text: #e8eef8;
     --wm-muted: #91a2ba;
@@ -747,8 +745,7 @@ body[data-theme="dark"] .history-item {
         margin: 4px 0 0;
         padding: 9px 7px;    }
     #historySearch { width: 100%; margin-right: 0; }
-    #historySort { width: 100%; }
-    .task-tools { align-items: stretch; }
+    #historySort { width: 100%; }    .task-tools { align-items: stretch; }
     .task-sort { max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -767,43 +764,6 @@ body[data-theme="dark"] .history-item {
     <p>Dump your notes, tasks, ideas, reminders, or plans below. AI Workmate will organise them into a summary, actionable tasks, priorities, and next steps.</p>
     <button type="button" class="secondary" id="themeToggle" onclick="toggleTheme()" aria-pressed="true">Switch to Light Mode</button>
 </header>
-
-<div class="dashboard">
-    <h2>Dashboard</h2>
-
-    <div class="stats">
-        <div class="stat-card">
-            <h3>Total Sessions</h3>
-            <p id="totalSessions">0</p>
-        </div>
-
-        <div class="stat-card">
-            <h3>Total Tasks</h3>
-            <p id="totalTasks">0</p>
-        </div>
-
-        <div class="stat-card">
-            <h3>Completed</h3>
-            <p id="completedTasks">0</p>
-        </div>
-
-        <div class="stat-card">
-            <h3>Pending</h3>
-            <p id="pendingTasks">0</p>
-        </div>
-    </div>
-
-    <div class="progress-section">
-        <div class="progress-label">
-            <span>Overall Progress</span>
-            <span id="progressPercent">0%</span>
-        </div>
-
-        <div class="progress-track">
-            <div id="progressBar" class="progress-fill"></div>
-        </div>
-    </div>
-</div>
 
 <div class="input-card">
     <h2>What are you working on?</h2>
@@ -885,6 +845,43 @@ body[data-theme="dark"] .history-item {
     <button class="secondary" onclick="saveCurrentSession()">
         Save this session
     </button>
+</div>
+
+<div class="dashboard">
+    <h2>Dashboard</h2>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Total Sessions</h3>
+            <p id="totalSessions">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Tasks</h3>
+            <p id="totalTasks">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Completed</h3>
+            <p id="completedTasks">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending</h3>
+            <p id="pendingTasks">0</p>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-label">
+            <span>Overall Progress</span>
+            <span id="progressPercent">0%</span>
+        </div>
+
+        <div class="progress-track">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+    </div>
 </div>
 
 <div class="history-card">
@@ -997,8 +994,7 @@ function exportWorkspaceBackup() {
         app: "AI Workmate",
         backupVersion: 1,
         exportedAt: new Date().toISOString(),        sessions: history
-    };
-    try {
+    };    try {
         var blob = new Blob([JSON.stringify(backup, null, 2)], {
             type: "application/json"
         });
@@ -1248,7 +1244,6 @@ function setTaskSort(sort) {
     if (allowed.indexOf(sort) === -1) return;    currentTaskSort = sort;
     if (currentSession) renderTasks(currentSession.tasks || []);
 }
-
 function sortVisibleTasks(tasks) {
     var priorityRank = {HIGH: 0, MEDIUM: 1, LOW: 2};
     return tasks.slice().sort(function(a, b) {
@@ -1497,8 +1492,7 @@ function editTask(item) {
     var updatedText = prompt("Edit this task:", item.text);    if (updatedText === null) return;
 
     updatedText = updatedText.trim();
-    if (!updatedText) {
-        document.getElementById("status").textContent =
+    if (!updatedText) {        document.getElementById("status").textContent =
             "A task cannot be empty. Use Delete if you want to remove it.";
         return;
     }
@@ -1747,8 +1741,7 @@ function updateDashboard(history) {
         });
     });
 
-    document.getElementById("totalSessions").textContent =
-        history.length;
+    document.getElementById("totalSessions").textContent =        history.length;
 
     document.getElementById("totalTasks").textContent =
         totalTasks;
@@ -1997,8 +1990,7 @@ function applyTheme(theme) {
     var selectedTheme = theme === "light" ? "light" : "dark";
     document.body.setAttribute("data-theme", selectedTheme);
     var button = document.getElementById("themeToggle");
-    if (button) {
-        button.textContent = selectedTheme === "dark"
+    if (button) {        button.textContent = selectedTheme === "dark"
             ? "Switch to Light Mode"
             : "Switch to Dark Mode";
         button.setAttribute("aria-pressed", selectedTheme === "dark" ? "true" : "false");
