@@ -18,46 +18,51 @@ AI Workmate is a personal AI workspace assistant that turns notes into an organi
 - **AI:** Google Gemini API.
 - **Storage:** Saved sessions and preferences are stored in the browser's local storage. Export a workspace backup to keep a separate copy.
 
-## Run locally on Windows
+## Quick start on Windows
 
 1. Download the repository using **Code → Download ZIP**, then extract it.
-2. Make sure `index.html` and `app.py` are in the same folder.
+2. Make sure all project files stay together in the extracted folder.
 3. Install Python 3.8 or later if it is not already installed.
+4. Double-click **Start_AI_Workmate.bat**.
+5. When prompted, enter your Gemini API key. Input is hidden and the launcher does not save the key.
+6. The browser should open to AI Workmate. Keep the launcher window open while using the app; press **Ctrl+C** in that window to stop it.
 
-   No third-party Python packages are required.
-4. Open Command Prompt in that folder.
-5. Set your Gemini API key for that Command Prompt window:
+No third-party Python packages are required.
 
+## Manual start (alternative)
+
+If you prefer to start it manually:
+
+1. Open Command Prompt in the project folder.
+2. Set your Gemini API key for that Command Prompt window:
    ```bat
    set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
    ```
-
-6. Start the server:
-
+3. Start the server:
    ```bat
    python app.py
    ```
+4. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
-7. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
-
-Keep the Command Prompt window open while using the app. Press `Ctrl+C` in that window to stop the server.
+Keep the Command Prompt window open while using the app. Press **Ctrl+C** to stop the server.
 
 ## API key safety
 
 - Get your own Gemini API key through Google AI Studio.
-- Keep the key in the `GEMINI_API_KEY` environment variable.
-- Never paste your API key into the HTML file, screenshots, public posts, or GitHub.
-- Do not commit a file containing your API key.
+- The quick launcher prompts for the key without displaying typed input and does not save it to a file.
+- Keep the key private; never paste it into the HTML file, screenshots, public posts, or GitHub.
+- Do not commit any file containing your API key.
 
 ## Data and privacy notes
 
 - Saved sessions are stored in the browser's local storage on that browser profile and device.
-- Clearing browser site data can remove locally saved sessions. Export a JSON backup regularly.
+- Clearing browser site data can remove saved sessions. Export a JSON backup regularly.
 - The local server binds to `127.0.0.1`, so this setup is intended for use on the same computer, not as a public hosted service.
+- Notes submitted for AI organisation are sent to Google's Gemini API. Do not submit confidential or sensitive information.
 
 ## Project status
 
-AI Workmate is an actively developed project. The local workflow and core features are being tested and refined ahead of a wider public release. This repository is currently a source-code showcase and local-run setup; it is not a hosted multi-user service.
+AI Workmate is an early-stage personal project being prepared for first-user feedback. This repository is a source-code showcase and local-run setup; it is not a hosted multi-user service.
 
 ## Privacy
 
