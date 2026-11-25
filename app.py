@@ -14,6 +14,7 @@ import datetime
 import json
 import os
 import re
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -299,25 +300,28 @@ def describe_task(task):
     return task["task"]
 
 
-def render_result(clean):
-    """Build the text layout the web page expects."""
+SECTION_ORDER = (
+    ("SUMMARY", "summary"),
+    ("ACTION ITEMS", "action_items"),
+    ("PRIORITIES", "priorities"),
+    ("SUGGESTED NEXT STEPS", "next_steps"),
+    ("DRAFTS", "drafts"),
+)
+
+
+def render_sections(clean):
+    """Build the text of each section. Returns {section name: text}."""
     tasks = clean["tasks"]
-    lines = []
 
-    lines.append("SUMMARY:")
-    lines.append(clean["summary"] or "No summary available.")
-    lines.append("")
-
-    lines.append("ACTION ITEMS:")
+    # Action items
     if tasks:
-        for task in tasks:
-            lines.append("- " + describe_task(task))
+        action_items = "\n".join("- " + describe_task(t) for t in tasks)
     else:
-        lines.append("No actionable tasks.")
-    lines.append("")
+        action_items = "No actionable tasks."
 
-    lines.append("PRIORITIES:")
+    # Priorities
     if tasks:
+        lines = []
         for level in PRIORITY_LEVELS:
             group = [t for t in tasks if t["priority"] == level]
             lines.append("#### " + level + " PRIORITY (" + str(len(group)) + ")")
@@ -327,19 +331,20 @@ def render_result(clean):
             else:
                 lines.append("No tasks in this category.")
             lines.append("")
+        priorities = "\n".join(lines).strip()
     else:
-        lines.append("No tasks to prioritize.")
-        lines.append("")
+        priorities = "No tasks to prioritize."
 
-    lines.append("SUGGESTED NEXT STEPS:")
+    # Next steps
     if clean["next_steps"]:
-        for number, step in enumerate(clean["next_steps"], start=1):
-            lines.append(str(number) + ". " + step)
+        next_steps = "\n".join(
+            str(number) + ". " + step
+            for number, step in enumerate(clean["next_steps"], start=1)
+        )
     else:
-        lines.append("No next steps needed.")
-    lines.append("")
+        next_steps = "No next steps needed."
 
-    lines.append("DRAFTS:")
+    # Drafts
     if clean["drafts"]:
         blocks = []
         for draft in clean["drafts"]:
@@ -348,17 +353,30 @@ def render_result(clean):
                 block += "Subject: " + draft["subject"] + "\n\n"
             block += draft["body"]
             blocks.append(block)
-        lines.append("\n\n".join(blocks))
+        drafts = "\n\n".join(blocks)
     else:
-        lines.append("No drafts needed.")
+        drafts = "No drafts needed."
 
-    return "\n".join(lines).strip()
+    return {
+        "summary": clean["summary"] or "No summary available.",
+        "action_items": action_items,
+        "priorities": priorities,
+        "next_steps": next_steps,
+        "drafts": drafts,
+    }
+
+
+def render_result(sections):
+    """Join the sections into one text block (kept for older pages)."""
+    return "\n\n".join(
+        title + ":\n" + sections[key] for title, key in SECTION_ORDER
+    )
 
 
 def organise_notes(user_text):
-    """Notes in, (result text, warnings list) out."""
+    """Notes in, (sections dict, warnings list) out."""
     clean = clean_response(call_gemini(user_text))
-    return render_result(clean), clean["warnings"]
+    return render_sections(clean), clean["warnings"]
 
 
 # ---------------------------------------------------------------- server
@@ -409,10 +427,14 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
 
         try:
             user_text = self.read_notes()
-            result, warnings = organise_notes(user_text)
+            sections, warnings = organise_notes(user_text)
 
+            # "sections" lets the page read each part directly, so a task
+            # that happens to contain a word like "drafts" cannot confuse it.
+            # "result" is the same content as one text block.
             send_json(self, 200, {
-                "result": result,
+                "result": render_result(sections),
+                "sections": sections,
                 "validation_warnings": warnings,
             })
 
@@ -477,7 +499,14 @@ def main():
     if not GEMINI_API_KEY:
         print("WARNING: GEMINI_API_KEY is not set. Organising notes will fail.")
 
-    server = HTTPServer((HOST, PORT), WorkmateHandler)
+    try:
+        server = HTTPServer((HOST, PORT), WorkmateHandler)
+    except OSError:
+        print("Could not start: port " + str(PORT) + " is already in use.")
+        print("AI Workmate may already be running. Close the other window")
+        print("(or press Stop in Thonny) and try again.")
+        return 1
+
     print("Serving AI Workmate at http://" + HOST + ":" + str(PORT))
 
     try:
@@ -486,7 +515,8 @@ def main():
         print("\nAI Workmate server stopped.")
     finally:
         server.server_close()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -1947,22 +1947,34 @@ async function organiseNotes() {
             throw new Error("Unexpected AI response format.");
         }
 
+        // Newer servers send each section separately (data.sections).
+        // Fall back to searching the single text block for older servers.
+        var serverSections = (data.sections && typeof data.sections === "object")
+            ? data.sections : null;
+
+        function sectionText(key, title, nextTitle) {
+            if (serverSections && typeof serverSections[key] === "string") {
+                return serverSections[key].trim();
+            }
+            return extractSection(answer, title, nextTitle);
+        }
+
         currentSession = {
             id: Date.now().toString(),
             notes: notes,
-            summary: extractSection(answer, "SUMMARY", "ACTION ITEMS"),
+            summary: sectionText("summary", "SUMMARY", "ACTION ITEMS"),
             tasks: getTaskLines(
-                extractSection(answer, "ACTION ITEMS", "PRIORITIES")
+                sectionText("action_items", "ACTION ITEMS", "PRIORITIES")
             ).map(function(text) {
                 return {text: text, done: false, dueDate: ""};
             }),
-            priorities: extractSection(
-                answer, "PRIORITIES", "SUGGESTED NEXT STEPS"
+            priorities: sectionText(
+                "priorities", "PRIORITIES", "SUGGESTED NEXT STEPS"
             ),
-            nextSteps: extractSection(
-                answer, "SUGGESTED NEXT STEPS", "DRAFTS"
+            nextSteps: sectionText(
+                "next_steps", "SUGGESTED NEXT STEPS", "DRAFTS"
             ),
-            drafts: extractSection(answer, "DRAFTS", null) ||
+            drafts: sectionText("drafts", "DRAFTS", null) ||
                 "No drafts suggested.",
             validationWarnings: data.validation_warnings || [],
             updated: new Date().toLocaleString()

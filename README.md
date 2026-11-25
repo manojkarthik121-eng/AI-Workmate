@@ -46,6 +46,23 @@ If you prefer to start it manually:
 
 Keep the Command Prompt window open while using the app. Press **Ctrl+C** to stop the server.
 
+## Run in GitHub Codespaces (optional)
+
+Codespaces is handy for showing the app to someone without installing anything.
+
+1. On GitHub, add your key as a Codespaces secret named `GEMINI_API_KEY` (Settings → Codespaces → Secrets) and give this repository access.
+2. Open a Codespace on this repository and run `python app.py` in the terminal.
+3. Open the **Ports** tab, then open port 8000 with the globe icon.
+
+Keep the port **Private** unless you are actively showing someone. A public link lets anyone with it use your Gemini quota.
+
+## Troubleshooting
+
+- **"Port 8000 is already in use":** AI Workmate is probably already running. Close the other launcher window (or press Stop in Thonny) and start it again.
+- **"GEMINI_API_KEY is not set":** Start with `Start_AI_Workmate.bat` and enter your key, or set the key before running `python app.py` (see Manual start above).
+- **"Something went wrong while organising your notes":** The details are printed in the launcher window. Common causes are a wrong key, no internet connection, or hitting Gemini's free usage limit. Wait a minute and try again.
+- **The model name stops working:** Set a different model before starting, for example `set GEMINI_MODEL=your-model-name`.
+
 ## API key safety
 
 - Get your own Gemini API key through Google AI Studio.

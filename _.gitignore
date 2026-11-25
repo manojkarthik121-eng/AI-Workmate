@@ -1,0 +1,20 @@
+# Secrets - never commit API keys
+.env
+*.env
+*.key
+secrets.*
+
+# Workspace backups can contain private notes
+ai-workmate-backup-*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
