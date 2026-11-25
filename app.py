@@ -143,6 +143,9 @@ warnings:
   Real problems only: scheduling conflicts, not enough time, a task due
   after its deadline, or important missing information (ask one short
   question). Empty list if everything is fine.
+  When checking time, add up ONLY durations the user actually stated. If a
+  task has no stated estimate, never guess one: say that its time is
+  unknown instead.
 
 drafts:
   Only emails or messages that would genuinely help. Empty list if none.
@@ -393,6 +396,11 @@ def send_json(handler, status, data):
 
 class WorkmateHandler(SimpleHTTPRequestHandler):
 
+    def end_headers(self):
+        # Never let the browser keep an old copy of the page.
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def host_is_allowed(self):
         # Only answer requests addressed to our local host name. This helps
         # block DNS-rebinding style access to the local server.
@@ -491,11 +499,30 @@ class WorkmateHandler(SimpleHTTPRequestHandler):
         return text
 
 
+def check_page(folder):
+    """Return a message saying which index.html is being served."""
+    page = os.path.join(folder, "index.html")
+    try:
+        with open(page, encoding="utf-8") as handle:
+            text = handle.read()
+    except (OSError, UnicodeDecodeError):
+        return "WARNING: could not read " + page
+
+    if "sectionText" in text:
+        return "Page file OK (new version): " + page
+    return (
+        "WARNING: this index.html is an OLD version, so tasks may be cut "
+        "off.\n         Replace it with the new index.html: " + page
+    )
+
+
 def main():
     # Serve index.html and friends from the folder this file lives in.
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    folder = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(folder)
 
     print("AI Workmate server starting...")
+    print(check_page(folder))
     if not GEMINI_API_KEY:
         print("WARNING: GEMINI_API_KEY is not set. Organising notes will fail.")
 
