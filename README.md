@@ -1,4 +1,7 @@
 # AI Workmate
+<img width="1293" height="608" alt="AIWM1" src="https://github.com/user-attachments/assets/846869a1-a24d-46ea-8e5b-afe01ca77709" />
+<img width="1269" height="579" alt="AIWM2" src="https://github.com/user-attachments/assets/d411eee1-4174-4a62-b20f-25157c2e5931" />
+<img width="931" height="204" alt="AIWM3" src="https://github.com/user-attachments/assets/07ea997c-971a-4f67-8d3d-241c0246de28" />
 
 AI Workmate is a personal AI workspace assistant that turns notes into an organised workspace. Add notes, let Gemini structure them, then manage the resulting tasks and saved sessions.
 
