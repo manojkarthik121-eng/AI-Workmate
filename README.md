@@ -91,3 +91,5 @@ Read the [AI Workmate Privacy Notice](PRIVACY.md) to understand local storage, G
 ## Feedback
 
 If you try AI Workmate, feedback on usability, reliability, and the note-to-action workflow is welcome.
+
+Built by Manoj.
